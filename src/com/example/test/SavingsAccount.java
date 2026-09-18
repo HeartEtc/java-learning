@@ -12,7 +12,8 @@ class SavingsAccount extends Account {
         }
     }
 
-    public void addInterest() {
+    @Override
+    public void endOfMonth() {
         double result = getBalance() * rate;
         if (result > 0) {
             deposit(result);

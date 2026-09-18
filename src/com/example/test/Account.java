@@ -1,6 +1,6 @@
 package com.example.test;
 
-class Account {
+abstract class Account {
     private final String id;
     private final String owner;
     private double balance;
@@ -52,4 +52,6 @@ class Account {
     public String toString() {
         return "Account{id='" + id + "', owner='" + owner + "', balance=" + balance + "}";
     }
+
+    public abstract void endOfMonth();
 }
