@@ -54,4 +54,18 @@ abstract class Account {
     }
 
     public abstract void endOfMonth();
+
+    public boolean transferTo(Account target, double amount) {
+        if (target == null || target == this || amount <= 0) {
+            return false;
+        }
+        if (!withdraw(amount)) {
+            return false;
+        }
+        if (!target.deposit(amount)) {
+            deposit(amount);          // 回滚
+            return false;
+        }
+        return true;
+    }
 }
