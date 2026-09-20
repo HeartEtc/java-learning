@@ -1,0 +1,68 @@
+package com.example.library;
+
+public class Book {
+    //书本身,存储4种字段,isbn         国际标准书号  用String
+    //               ,title        标题        用string
+    //               ,author       作者        用string
+    //               ,available    可用状态     用boolean
+
+    private final String isbn;
+    private final String id;
+    private final String title;
+    private final String author;
+    private boolean available;
+
+    public Book(String isbn, String id,String title, String author) {
+        if (id == null || id.isBlank()) {
+            throw new IllegalArgumentException("invalid id!");
+        }
+        else if (isbn == null || isbn.isBlank()) {
+            throw new IllegalArgumentException("invalid isbn!");
+        }
+        else if (title == null || title.isBlank()) {
+            throw new IllegalArgumentException("invalid title name!");
+        }
+        else if (author == null || author.isBlank()) {
+            throw new IllegalArgumentException("invalid author name!");
+        }
+        else {
+            this.isbn = isbn;
+            this.id = id;
+            this.title = title;
+            this.author = author;
+            this.available = true;
+        }
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
+
+    @Override
+    public String toString() {
+        String s = "Book{isbn='" + isbn + "', id='" + id + "', title='" + title
+                + "', author='" + author + "', available=" + available + "}";
+        return s;
+    }
+}
