@@ -12,11 +12,11 @@ public class Book {
     private final String author;
     private boolean available;
 
-    public Book(String isbn, String id,String title, String author) {
-        if (id == null || id.isBlank()) {
+    public Book(String id, String isbn,String title, String author) {
+        if (isbn == null || isbn.isBlank()) {
             throw new IllegalArgumentException("invalid id!");
         }
-        else if (isbn == null || isbn.isBlank()) {
+        else if (id == null || id.isBlank()) {
             throw new IllegalArgumentException("invalid isbn!");
         }
         else if (title == null || title.isBlank()) {
@@ -26,8 +26,8 @@ public class Book {
             throw new IllegalArgumentException("invalid author name!");
         }
         else {
-            this.isbn = isbn;
             this.id = id;
+            this.isbn = isbn;
             this.title = title;
             this.author = author;
             this.available = true;
