@@ -3,13 +3,15 @@ package com.example.library;
 public class Main {
     public static void main(String[] args) {
         Library lib = new Library(10, 10, 10);
-        System.out.println(lib.addBook(new Book("B001", "9787111547426", "算法导论", "CLRS")));   // true
-        System.out.println(lib.addBook(new Book("B002", "9787111213826", "Java编程思想", "Eckel"))); // true
-        System.out.println(lib.getBookCount());                       // 2
-        System.out.println(lib.addUser(new Reader("R001", "张三")));   // true
-        System.out.println(lib.getUserCount());                       // 1
-        System.out.println(lib.findBookById("B001"));                 // Book{...}
-        System.out.println(lib.findUserById("R001"));                 // 读者{...}
-        lib.findBookById("X999");
+        lib.addBook(new Book("B001", "9787111547426", "算法导论", "CLRS"));
+        lib.addUser(new Reader("R001", "张三"));
+        lib.addUser(new Reader("R002", "李四"));
+
+        System.out.println(lib.borrowBook("B001", "R001"));   // 预测：？
+        System.out.println(lib.findBookById("B001"));         // 预测：available=？
+        System.out.println(lib.getLoanCount());               // 预测：？
+        System.out.println(lib.borrowBook("B001", "R002"));   // 预测：？
+        lib.borrowBook("B002", "R001");                       // 预测：？
+        lib.borrowBook("B001", "R999");                       // 预测：？                      // 抛 UserNotFoundException
     }
 }
