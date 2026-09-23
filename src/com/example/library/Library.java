@@ -20,6 +20,13 @@ public class Library {
                5.存储记录          到期时间通过配置修改
                6.返回成功(这要求borrowBook为boolean类型)
                returnBook         还书
+               工作步骤:
+               1. 找书   findBookById
+               2. 找loan里对应记录并标记位置
+               4. 从下标开始，后面的元素整体前移一位
+               5. loans[loanCount - 1] = null，loanCount--
+               6. book.setAvailable(true)
+               7. return true
      */
 
     private final User[] users;
@@ -106,16 +113,51 @@ public class Library {
     public boolean borrowBook(String bookId, String userId){
         Book book = findBookById(bookId);
         User user = findUserById(userId);
-        if (loanCount >= loans.length){
+        if (!book.isAvailable()){
             return false;
         }
-        if (!book.isAvailable()){
+        if (loanCount >= loans.length){
             return false;
         }
         book.setAvailable(false);
         LocalDate borrowDate = LocalDate.now();
         addLoan(new Loan(book,user,borrowDate,
                 borrowDate.plusDays(loanDays)));
+        return true;
+    }
+
+    /*
+    工作步骤:
+               1. 找书   findBookById
+               2. 找loan里对应记录并标记位置
+               4. 从下标开始，后面的元素整体前移一位
+               5. loans[loanCount - 1] = null，loanCount--
+               6. book.setAvailable(true)
+               7. return true
+     */
+
+    public boolean returnBook(String bookId, String userId){
+        Book book = findBookById(bookId);
+        int index = -1;
+        for (int i = 0; i < loanCount; i++) {
+            if (book.equals(loans[i].getBook())
+                    && loans[i].getUser().getId().equals(userId)) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index == -1){
+            return false;
+        }
+
+        for (int i = index; i < loanCount - 1; i++) {
+            loans[i] = loans[i + 1];
+        }
+
+        book.setAvailable(true);
+        loans[loanCount - 1] = null;
+        loanCount--;
         return true;
     }
 }

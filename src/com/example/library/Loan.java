@@ -47,6 +47,10 @@ public class Loan {
         return book;
     }
 
+    public User getUser() {
+        return user;
+    }
+
     @Override
     public String toString() {
         return "Loan{book=" + book.getTitle() + ", user=" + user.getName()
