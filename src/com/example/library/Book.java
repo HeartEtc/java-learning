@@ -1,5 +1,7 @@
 package com.example.library;
 
+import java.util.Objects;
+
 public class Book {
     //书本身,存储4种字段,isbn         国际标准书号  用String
     //               ,title        标题        用string
@@ -32,6 +34,22 @@ public class Book {
             this.author = author;
             this.available = true;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return available == book.available
+                && Objects.equals(isbn, book.isbn)
+                && Objects.equals(id, book.id)
+                && Objects.equals(title, book.title)
+                && Objects.equals(author, book.author);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(isbn, id, title, author, available);
     }
 
     public String getAuthor() {
