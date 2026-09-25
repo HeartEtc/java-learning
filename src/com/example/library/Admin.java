@@ -6,8 +6,8 @@ public class Admin extends User{
     本类目前不提供方法。
      */
 
-    public Admin(String id, String name){
-        super(id, name);
+    public Admin(String id, String name, int loanLimit){
+        super(id, name, loanLimit);
     }
 
     @Override

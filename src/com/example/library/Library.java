@@ -113,13 +113,21 @@ public class Library {
     public boolean borrowBook(String bookId, String userId){
         Book book = findBookById(bookId);
         User user = findUserById(userId);
+
         if (!book.isAvailable()){
             return false;
         }
+
+        if (user.getBorrowCount() >= user.getLoanLimit()){
+            return false;
+        }
+
         if (loanCount >= loans.length){
             return false;
         }
+
         book.setAvailable(false);
+        user.setBorrowCount(user.getBorrowCount() + 1);
         LocalDate borrowDate = LocalDate.now();
         addLoan(new Loan(book,user,borrowDate,
                 borrowDate.plusDays(loanDays)));
@@ -138,7 +146,13 @@ public class Library {
 
     public boolean returnBook(String bookId, String userId){
         Book book = findBookById(bookId);
+        User user = findUserById(userId);
         int index = -1;
+
+        if (user.getBorrowCount() <= 0){
+            return false;
+        }
+
         for (int i = 0; i < loanCount; i++) {
             if (book.equals(loans[i].getBook())
                     && loans[i].getUser().getId().equals(userId)) {
@@ -156,8 +170,68 @@ public class Library {
         }
 
         book.setAvailable(true);
+        user.setBorrowCount(user.getBorrowCount() - 1);
         loans[loanCount - 1] = null;
         loanCount--;
+        return true;
+    }
+
+    public boolean deleteBook(User operator, String bookId) {
+        if (!(operator instanceof Admin)) {
+            return false;
+        }
+
+        Book book = findBookById(bookId);
+        int index = -1;
+        for (int i = 0; i < bookCount; i++) {
+            if (book.equals(books[i])
+                    && book.isAvailable()) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index == -1){
+            return false;
+        }
+
+        for (int i = index; i < bookCount - 1; i++) {
+            books[i] = books[i + 1];
+        }
+
+        books[bookCount - 1] = null;
+        bookCount--;
+        return true;
+    }
+
+    public boolean deleteUser(User operator, String userId) {
+        User user = findUserById(userId);
+        if (!(operator instanceof Admin)){
+            return false;
+        }
+
+        if (user.getBorrowCount() > 0){
+            return false;
+        }
+
+        int index = -1;
+        for (int i = 0; i < userCount; i++) {
+            if (user.equals(users[i])) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index == -1){
+            return false;
+        }
+
+        for (int i = index; i < userCount - 1; i++) {
+            users[i] = users[i + 1];
+        }
+
+        users[userCount - 1] = null;
+        userCount--;
         return true;
     }
 }
