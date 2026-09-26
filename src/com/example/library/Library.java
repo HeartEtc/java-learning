@@ -93,6 +93,48 @@ public class Library {
         return loanDays;
     }
 
+    public Loan[] getActiveLoans() {
+        Loan[] result = new Loan[loanCount];
+        for (int i = 0; i < loanCount; i++) {
+            result[i] = loans[i];
+        }
+        return result;
+    }
+
+    public Loan[] getActiveUserLoans(String userid) {
+        Loan[] result = new Loan[loanCount];
+        for (int i = 0; i < loanCount; i++) {
+            if (findUserById(userid).equals(loans[i].getUser())) {
+                result[i] = loans[i];
+            }
+        }
+        return result;
+    }
+
+    public Book[] getActiveBooks() {
+        Book[] result = new Book[bookCount];
+        for (int i = 0; i < bookCount; i++) {
+            result[i] = books[i];
+        }
+        return result;
+    }
+
+    public User[] getActiveUsers() {
+        User[] result = new User[userCount];
+        for (int i = 0; i < userCount; i++) {
+            result[i] = users[i];
+        }
+        return result;
+    }
+
+    public void printAllBooks() {
+        for (int i = 0; i < bookCount; i++) {
+            System.out.println((i + 1) + ". " + books[i].getTitle()
+                    + " / " + books[i].getAuthor()
+                    + (books[i].isAvailable() ? "  [可借]" : "  [已借出]"));
+        }
+    }
+
     public Book findBookById(String id) {
         for (int i = 0; i < bookCount; i++) {
             if (id.equals(books[i].getId())) {
@@ -101,6 +143,7 @@ public class Library {
         }
         throw new BookNotFoundException(id);
     }
+
     public User findUserById(String id) {
         for (int i = 0; i < userCount; i++) {
             if (id.equals(users[i].getId())) {
