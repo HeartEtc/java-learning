@@ -101,11 +101,29 @@ public class Library {
         return result;
     }
 
+    /**
+     * 取某个用户当前在借的记录。
+     *
+     * 数组长度必须等于"实际匹配数"，所以只能遍历两遍：
+     * 第一遍数出条数用于分配数组，第二遍才装填。
+     * 注意装填用独立计数器 j（源下标 i 与目标下标 j 不能混用，否则结果中间会留下 null）。
+     */
     public Loan[] getActiveUserLoans(String userid) {
-        Loan[] result = new Loan[loanCount];
+        User user = findUserById(userid);        // 提到循环外，避免每次迭代都做一次 O(n) 查找
+
+        int n = 0;
         for (int i = 0; i < loanCount; i++) {
-            if (findUserById(userid).equals(loans[i].getUser())) {
-                result[i] = loans[i];
+            if (user.equals(loans[i].getUser())) {
+                n++;
+            }
+        }
+
+        Loan[] result = new Loan[n];
+        int j = 0;
+        for (int i = 0; i < loanCount; i++) {
+            if (user.equals(loans[i].getUser())) {
+                result[j] = loans[i];
+                j++;
             }
         }
         return result;

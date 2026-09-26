@@ -17,11 +17,11 @@ final class SampleData {
         Library library = new Library(50, 50, 50);
 
         // ---- 管理员（不通过注册产生，属于系统预置）----
-        library.addUser(new Admin("M001", "王老师", 10));
+        library.addUser(new Admin("M001", "heart", 10));
 
         // ---- 读者 ----
-        library.addUser(new Reader("R001", "张三", 3));
-        library.addUser(new Reader("R002", "李四", 3));
+        library.addUser(new Reader("R001", "test1", 3));
+        library.addUser(new Reader("R002", "test2", 3));
 
         // ---- 藏书 ----
         library.addBook(new Book("B001", "9787111547426", "算法导论", "CLRS"));
