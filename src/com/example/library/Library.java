@@ -2,6 +2,8 @@ package com.example.library;
 import com.example.library.exception.BookNotFoundException;
 import com.example.library.exception.UserNotFoundException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Library {
     //图书的存储,新建指定长度的数组,数组具体内容见Book
@@ -27,49 +29,31 @@ public class Library {
                5. loans[loanCount - 1] = null，loanCount--
                6. book.setAvailable(true)
                7. return true
+
+               10.11更新:改变数组为list和arraylist
+               重构代码
      */
 
-    private final User[] users;
-    private final Book[] books;
-    private final Loan[] loans;
-    private int bookCount;
-    private int userCount;
-    private int loanCount;
+    private final List<User> users = new ArrayList<>();
+    private final List<Book> books = new ArrayList<>();
+    private final List<Loan> loans = new ArrayList<>();
     private int loanDays = 30;
 
-    public Library(int userCapacity, int bookCapacity, int loanCapacity) {
-        this.users = new User[userCapacity];
-        this.books = new Book[bookCapacity];
-        this.loans = new Loan[loanCapacity];
-        bookCount = 0;
-        userCount = 0;
-        loanCount = 0;
+    public Library() {
     }
 
     public boolean addBook(Book book) {
-        if (bookCount >= books.length) {
-            return false;
-        }
-        books[bookCount] = book;
-        bookCount++;
+        books.add(book);
         return true;
     }
 
     public boolean addUser(User user) {
-        if (userCount >= users.length) {
-            return false;
-        }
-        users[userCount] = user;
-        userCount++;
+        users.add(user);
         return true;
     }
 
-    private boolean addLoan(Loan loan) {
-        if (loanCount >= loans.length) {
-            return false;
-        }
-        loans[loanCount] = loan;
-        loanCount++;
+    public boolean addLoan(Loan loan) {
+        loans.add(loan);
         return true;
     }
 
@@ -78,15 +62,15 @@ public class Library {
     }
 
     public int getBookCount() {
-        return bookCount;
+        return books.size();
     }
 
     public int getUserCount() {
-        return userCount;
+        return users.size();
     }
 
     public int getLoanCount() {
-        return loanCount;
+        return loans.size();
     }
 
     public int getLoanDays() {
@@ -94,9 +78,9 @@ public class Library {
     }
 
     public Loan[] getActiveLoans() {
-        Loan[] result = new Loan[loanCount];
-        for (int i = 0; i < loanCount; i++) {
-            result[i] = loans[i];
+        Loan[] result = new Loan[loans.size()];
+        for (int i = 0; i < loans.size(); i++) {
+            result[i] = loans.get(i);
         }
         return result;
     }
@@ -112,17 +96,17 @@ public class Library {
         User user = findUserById(userid);        // 提到循环外，避免每次迭代都做一次 O(n) 查找
 
         int n = 0;
-        for (int i = 0; i < loanCount; i++) {
-            if (user.equals(loans[i].getUser())) {
+        for (int i = 0; i < loans.size(); i++) {
+            if (user.equals(loans.get(i).getUser())) {
                 n++;
             }
         }
 
         Loan[] result = new Loan[n];
         int j = 0;
-        for (int i = 0; i < loanCount; i++) {
-            if (user.equals(loans[i].getUser())) {
-                result[j] = loans[i];
+        for (int i = 0; i < loans.size(); i++) {
+            if (user.equals(loans.get(i).getUser())) {
+                result[j] = loans.get(i);
                 j++;
             }
         }
@@ -130,42 +114,42 @@ public class Library {
     }
 
     public Book[] getActiveBooks() {
-        Book[] result = new Book[bookCount];
-        for (int i = 0; i < bookCount; i++) {
-            result[i] = books[i];
+        Book[] result = new Book[books.size()];
+        for (int i = 0; i < books.size(); i++) {
+            result[i] = books.get(i);
         }
         return result;
     }
 
     public User[] getActiveUsers() {
-        User[] result = new User[userCount];
-        for (int i = 0; i < userCount; i++) {
-            result[i] = users[i];
+        User[] result = new User[users.size()];
+        for (int i = 0; i < users.size(); i++) {
+            result[i] = users.get(i);
         }
         return result;
     }
 
     public void printAllBooks() {
-        for (int i = 0; i < bookCount; i++) {
-            System.out.println((i + 1) + ". " + books[i].getTitle()
-                    + " / " + books[i].getAuthor()
-                    + (books[i].isAvailable() ? "  [可借]" : "  [已借出]"));
+        for (int i = 0; i < books.size(); i++) {
+            System.out.println((i + 1) + ". " + books.get(i).getTitle()
+                    + " / " + books.get(i).getAuthor()
+                    + (books.get(i).isAvailable() ? "  [可借]" : "  [已借出]"));
         }
     }
 
     public Book findBookById(String id) {
-        for (int i = 0; i < bookCount; i++) {
-            if (id.equals(books[i].getId())) {
-                return books[i];
+        for (int i = 0; i < books.size(); i++) {
+            if (id.equals(books.get(i).getId())) {
+                return books.get(i);
             }
         }
         throw new BookNotFoundException(id);
     }
 
     public User findUserById(String id) {
-        for (int i = 0; i < userCount; i++) {
-            if (id.equals(users[i].getId())) {
-                return users[i];
+        for (int i = 0; i < users.size(); i++) {
+            if (id.equals(users.get(i).getId())) {
+                return users.get(i);
             }
         }
         throw new UserNotFoundException(id);
@@ -180,10 +164,6 @@ public class Library {
         }
 
         if (user.getBorrowCount() >= user.getLoanLimit()){
-            return false;
-        }
-
-        if (loanCount >= loans.length){
             return false;
         }
 
@@ -208,33 +188,22 @@ public class Library {
     public boolean returnBook(String bookId, String userId){
         Book book = findBookById(bookId);
         User user = findUserById(userId);
-        int index = -1;
 
         if (user.getBorrowCount() <= 0){
             return false;
         }
 
-        for (int i = 0; i < loanCount; i++) {
-            if (book.equals(loans[i].getBook())
-                    && loans[i].getUser().getId().equals(userId)) {
-                index = i;
-                break;
+        for (int i = 0; i < loans.size(); i++) {
+            Loan l = loans.get(i);
+            if (l.getBook().equals(book) && l.getUser().equals(user)) {
+                loans.remove(i);                 // 删借阅记录（传 int → 按下标删）
+                book.setAvailable(true);
+                user.setBorrowCount(user.getBorrowCount() - 1);
+                return true;
             }
         }
 
-        if (index == -1){
-            return false;
-        }
-
-        for (int i = index; i < loanCount - 1; i++) {
-            loans[i] = loans[i + 1];
-        }
-
-        book.setAvailable(true);
-        user.setBorrowCount(user.getBorrowCount() - 1);
-        loans[loanCount - 1] = null;
-        loanCount--;
-        return true;
+        return false;        // 没有"这本书 + 这个人"的借阅记录 → 还书失败
     }
 
     public boolean deleteBook(User operator, String bookId) {
@@ -243,25 +212,10 @@ public class Library {
         }
 
         Book book = findBookById(bookId);
-        int index = -1;
-        for (int i = 0; i < bookCount; i++) {
-            if (book.equals(books[i])
-                    && book.isAvailable()) {
-                index = i;
-                break;
-            }
-        }
-
-        if (index == -1){
+        if (!books.remove(book)) {
             return false;
         }
 
-        for (int i = index; i < bookCount - 1; i++) {
-            books[i] = books[i + 1];
-        }
-
-        books[bookCount - 1] = null;
-        bookCount--;
         return true;
     }
 
@@ -275,24 +229,10 @@ public class Library {
             return false;
         }
 
-        int index = -1;
-        for (int i = 0; i < userCount; i++) {
-            if (user.equals(users[i])) {
-                index = i;
-                break;
-            }
-        }
-
-        if (index == -1){
+        if (!users.remove(user)) {
             return false;
         }
 
-        for (int i = index; i < userCount - 1; i++) {
-            users[i] = users[i + 1];
-        }
-
-        users[userCount - 1] = null;
-        userCount--;
         return true;
     }
 }

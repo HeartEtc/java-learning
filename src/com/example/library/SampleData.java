@@ -14,7 +14,7 @@ final class SampleData {
 
     /** 建一个带管理员、读者和藏书的图书馆。 */
     static Library createLibrary() {
-        Library library = new Library(50, 50, 50);
+        Library library = new Library();
 
         // ---- 管理员（不通过注册产生，属于系统预置）----
         library.addUser(new Admin("M001", "heart", 10));
