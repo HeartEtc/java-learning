@@ -40,8 +40,7 @@ public class Book {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return available == book.available
-                && Objects.equals(isbn, book.isbn)
+        return     Objects.equals(isbn, book.isbn)
                 && Objects.equals(id, book.id)
                 && Objects.equals(title, book.title)
                 && Objects.equals(author, book.author);
@@ -49,7 +48,7 @@ public class Book {
 
     @Override
     public int hashCode() {
-        return Objects.hash(isbn, id, title, author, available);
+        return Objects.hash(isbn, id, title, author);
     }
 
     public String getAuthor() {

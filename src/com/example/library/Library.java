@@ -3,7 +3,9 @@ import com.example.library.exception.BookNotFoundException;
 import com.example.library.exception.UserNotFoundException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Library {
     //图书的存储,新建指定长度的数组,数组具体内容见Book
@@ -24,9 +26,9 @@ public class Library {
                returnBook         还书
                工作步骤:
                1. 找书   findBookById
-               2. 找loan里对应记录并标记位置
-               4. 从下标开始，后面的元素整体前移一位
-               5. loans[loanCount - 1] = null，loanCount--
+               2. 找loan里对应记录并标记位置（不再需要）
+               4. 从下标开始，后面的元素整体前移一位（不再需要）
+               5. loans[loanCount - 1] = null，loanCount--（不再需要）
                6. book.setAvailable(true)
                7. return true
 
@@ -37,18 +39,30 @@ public class Library {
     private final List<User> users = new ArrayList<>();
     private final List<Book> books = new ArrayList<>();
     private final List<Loan> loans = new ArrayList<>();
+    private final Map<String, Book> bookIndex = new HashMap<>();
+    private final Map<String, User> userIndex = new HashMap<>();
     private int loanDays = 30;
 
     public Library() {
     }
 
     public boolean addBook(Book book) {
+        String id = book.getId();
+        if (bookIndex.containsKey(id)) {
+            return false;
+        }
         books.add(book);
+        bookIndex.put(id, book);
         return true;
     }
 
     public boolean addUser(User user) {
+        String id = user.getId();
+        if (userIndex.containsKey(id)) {
+            return false;
+        }
         users.add(user);
+        userIndex.put(user.getId(), user);
         return true;
     }
 
@@ -138,19 +152,15 @@ public class Library {
     }
 
     public Book findBookById(String id) {
-        for (int i = 0; i < books.size(); i++) {
-            if (id.equals(books.get(i).getId())) {
-                return books.get(i);
-            }
+        if (bookIndex.containsKey(id)) {
+                return bookIndex.get(id);
         }
         throw new BookNotFoundException(id);
     }
 
     public User findUserById(String id) {
-        for (int i = 0; i < users.size(); i++) {
-            if (id.equals(users.get(i).getId())) {
-                return users.get(i);
-            }
+        if (userIndex.containsKey(id)) {
+            return userIndex.get(id);
         }
         throw new UserNotFoundException(id);
     }
@@ -178,9 +188,9 @@ public class Library {
     /*
     工作步骤:
                1. 找书   findBookById
-               2. 找loan里对应记录并标记位置
-               4. 从下标开始，后面的元素整体前移一位
-               5. loans[loanCount - 1] = null，loanCount--
+               2. 找loan里对应记录并标记位置（不再需要）
+               4. 从下标开始，后面的元素整体前移一位（不再需要）
+               5. loans[loanCount - 1] = null，loanCount--（不再需要）
                6. book.setAvailable(true)
                7. return true
      */
@@ -207,24 +217,21 @@ public class Library {
     }
 
     public boolean deleteBook(User operator, String bookId) {
-        if (!(operator instanceof Admin)) {
+        if (!(operator instanceof Admin)) {   // 1. 先授权（不碰数据）
             return false;
         }
-
-        Book book = findBookById(bookId);
-        if (!books.remove(book)) {
-            return false;
-        }
-
+        Book book = findBookById(bookId);     // 2. 再查存在性（不存在 → 抛异常）
+        books.remove(book);                   // 3. 最后执行
+        bookIndex.remove(bookId);
         return true;
     }
 
     public boolean deleteUser(User operator, String userId) {
-        User user = findUserById(userId);
         if (!(operator instanceof Admin)){
             return false;
         }
 
+        User user = findUserById(userId);
         if (user.getBorrowCount() > 0){
             return false;
         }
@@ -233,6 +240,7 @@ public class Library {
             return false;
         }
 
+        userIndex.remove(userId);
         return true;
     }
 }

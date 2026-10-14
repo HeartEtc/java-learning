@@ -135,7 +135,7 @@ public class Main {
             System.out.println("注册成功");
         }
         else {
-            System.out.println("注册失败：用户已满");
+            System.out.println("注册失败");
         }
     }
 
