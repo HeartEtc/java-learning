@@ -236,10 +236,7 @@ public class Library {
             return false;
         }
 
-        if (!users.remove(user)) {
-            return false;
-        }
-
+        users.remove(user);
         userIndex.remove(userId);
         return true;
     }
