@@ -3,7 +3,7 @@ package com.example.library;
 import com.example.library.exception.BookNotFoundException;
 import com.example.library.exception.UserNotFoundException;
 
-public class LookupTest {
+public class BoundaryTest {
 
     static int pass = 0, fail = 0;
 
