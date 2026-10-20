@@ -1,3 +1,3 @@
 package com.example.game;
 
-public enum Type { SPADE, HEART, DIAMOND, CLUB }   // 黑桃/红心/方块/梅花
+public enum Suit { 黑桃, 红心, 方片, 梅花 }   // 黑桃/红心/方块/梅花

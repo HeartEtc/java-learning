@@ -1,4 +1,9 @@
 package com.example.game;
 
-public class Card {
+
+public record Card(Suit Suit, Rank rank) {
+    public int pointValue() {
+        return rank.value();
+    }
 }
+
