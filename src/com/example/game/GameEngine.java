@@ -35,10 +35,10 @@ public class GameEngine {
         //   点数>21 → 打印爆牌 → return 0
         //   问"还要牌吗 y/n" → 输入 n → 打印停牌 → return 点数
         List<Card> hand = new ArrayList<>();
-        while (true) {                                // 外层：抽牌 + 判爆
+        while (true) {
             Card c = deck.draw();
             hand.add(c);
-            int value = handValue(hand);              // 别叫 handValue，会和方法名打架
+            int value = handValue(hand);
 
             System.out.println("抽到一张" + c.Suit() + c.rank() + "!");
             System.out.println("您现在手牌点数为" + value);
@@ -48,11 +48,11 @@ public class GameEngine {
                 return 0;
             }
 
-            while (true) {                            // 内层：问 1/0，输错重问
+            while (true) {
                 System.out.println("还要抽吗?\n 1 for yes\n 0 for no");
                 int option = sc.nextInt();
                 if (option == 1) {
-                    break;                            // 退出内层 → 回外层抽牌
+                    break;
                 } else if (option == 0) {
                     System.out.println("停牌\n本局 " + value + " 分");
                     return value;
